@@ -1,0 +1,11 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+:root {
+  --color-primary: #16a34a; /* emerald-600 */
+  --color-primary-focus: #22c55e; /* emerald-500 */
+  --color-primary-content: #ffffff;
+  --color-secondary: #22c55e; /* emerald-800 */
+  --color-secondary-focus: #22c55e; /* emerald-600 */
+  --color-secondary-content: #ffffff;
+}
