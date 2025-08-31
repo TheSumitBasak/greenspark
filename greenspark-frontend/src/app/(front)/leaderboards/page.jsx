@@ -44,7 +44,6 @@ export default function Leaderboards() {
   };
 
   const fetchLeaderboard = async (month) => {
-    const loadingToast = showToast.loading(toastMessages.leaderboard.loading);
     try {
       setLoading(true);
       setError(null);

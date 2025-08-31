@@ -3,12 +3,12 @@ import { Verifier, User } from "../models";
 import { getContract, handleBlockchainError } from "../config/blockchain";
 
 export const registerVerifier = async (req: Request, res: Response) => {
-  const { organizationName, walletAddress, documents } = req.body;
+  const { organizationName, walletAddress, email, documents } = req.body;
 
-  if (!organizationName || !walletAddress) {
+  if (!organizationName || !walletAddress || !email) {
     return res
       .status(400)
-      .json({ error: "Organization name and wallet address required" });
+      .json({ error: "Organization name, wallet address, and email required" });
   }
 
   // Check if verifier already exists
@@ -24,6 +24,7 @@ export const registerVerifier = async (req: Request, res: Response) => {
   const verifier = new Verifier({
     organizationName,
     walletAddress,
+    email,
     documents: documents || [],
     status: "pending",
   });
@@ -36,6 +37,7 @@ export const registerVerifier = async (req: Request, res: Response) => {
     await contract.registerVerifier(
       walletAddress,
       organizationName,
+      email,
       documents || []
     );
   } catch (blockchainError) {
@@ -51,6 +53,7 @@ export const registerVerifier = async (req: Request, res: Response) => {
       id: verifier._id,
       organizationName: verifier.organizationName,
       walletAddress: verifier.walletAddress,
+      email: verifier.email,
       status: verifier.status,
     },
   });
@@ -73,6 +76,10 @@ export const startVerifierVote = async (req: Request, res: Response) => {
   try {
     const contract = getContract();
     await contract.startVerifierVote(verifier.walletAddress);
+
+    // Update verifier in database to mark vote as started
+    verifier.voteStarted = true;
+    await verifier.save();
   } catch (blockchainError) {
     throw handleBlockchainError(blockchainError);
   }
@@ -101,6 +108,10 @@ export const getVotingStatus = async (req: Request, res: Response) => {
       verifier.walletAddress,
       (req as any).user.walletAddress
     );
+    const canVote = await contract.canVote(
+      verifier.walletAddress,
+      (req as any).user.walletAddress
+    );
 
     res.json({
       success: true,
@@ -108,13 +119,15 @@ export const getVotingStatus = async (req: Request, res: Response) => {
         verifierId: verifier._id,
         walletAddress: verifier.walletAddress,
         organizationName: verifier.organizationName,
+        email: verifier.email,
         voteStart: verifierData.voteStart,
         voteEnd: verifierData.voteEnd,
         yesVotes: verifierData.yesVotes,
         noVotes: verifierData.noVotes,
         isActive: verifierData.active,
-        canVote: Date.now() / 1000 <= verifierData.voteEnd,
+        canVote: canVote && Date.now() / 1000 <= verifierData.voteEnd,
         hasVoted: hasVoted,
+        votingEligible: canVote,
       },
     });
   } catch (blockchainError) {
@@ -196,4 +209,72 @@ export const getActiveVerifiers = async (req: Request, res: Response) => {
     success: true,
     verifiers,
   });
+};
+
+export const syncVotingStatus = async (req: Request, res: Response) => {
+  const { verifierId } = req.params;
+
+  const verifier = await Verifier.findById(verifierId);
+
+  if (!verifier) {
+    return res.status(404).json({ error: "Verifier not found" });
+  }
+
+  try {
+    const contract = getContract();
+    const verifierData = await contract.getVerifierData(verifier.walletAddress);
+
+    // Update verifier with blockchain data
+    verifier.voteStarted = verifierData.voteStarted;
+    verifier.status = verifierData.active ? "active" : verifier.status;
+    await verifier.save();
+
+    res.json({
+      success: true,
+      message: "Voting status synced from blockchain",
+      verifier,
+    });
+  } catch (blockchainError) {
+    throw handleBlockchainError(blockchainError);
+  }
+};
+
+export const checkVotingEligibility = async (req: Request, res: Response) => {
+  const { verifierId } = req.params;
+  const { walletAddress } = req.body;
+
+  if (!walletAddress) {
+    return res.status(400).json({ error: "Wallet address is required" });
+  }
+
+  const verifier = await Verifier.findById(verifierId);
+
+  if (!verifier) {
+    return res.status(404).json({ error: "Verifier not found" });
+  }
+
+  try {
+    const contract = getContract();
+    const canVote = await contract.canVote(
+      verifier.walletAddress,
+      walletAddress
+    );
+    const hasVoted = await contract.hasVoted(
+      verifier.walletAddress,
+      walletAddress
+    );
+
+    res.json({
+      success: true,
+      eligibility: {
+        canVote,
+        hasVoted,
+        walletAddress,
+        verifierId: verifier._id,
+        verifierAddress: verifier.walletAddress,
+      },
+    });
+  } catch (blockchainError) {
+    throw handleBlockchainError(blockchainError);
+  }
 };

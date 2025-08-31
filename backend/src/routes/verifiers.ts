@@ -12,6 +12,8 @@ import {
   getVerifierById,
   updateVerifierStatus,
   getActiveVerifiers,
+  syncVotingStatus,
+  checkVotingEligibility,
 } from "../controllers/verifierController";
 import handler from "@/utils/handler";
 
@@ -40,6 +42,11 @@ router.get("/:verifierId/voting-status", authenticateToken, (req, res) =>
   handler(req, res, getVotingStatus)
 );
 
+// Check voting eligibility for a specific wallet address
+router.post("/:verifierId/check-eligibility", (req, res) =>
+  handler(req, res, checkVotingEligibility)
+);
+
 // Get active verifiers only (must come before :verifierId routes)
 router.get("/active/list", (req, res) => handler(req, res, getActiveVerifiers));
 
@@ -51,6 +58,14 @@ router.get("/:verifierId", authenticateToken, (req, res) =>
 // Update verifier status (admin only)
 router.put("/:verifierId/status", authenticateToken, requireAdmin, (req, res) =>
   handler(req, res, updateVerifierStatus)
+);
+
+// Sync voting status from blockchain (admin only)
+router.post(
+  "/:verifierId/sync-voting",
+  authenticateToken,
+  requireAdmin,
+  (req, res) => handler(req, res, syncVotingStatus)
 );
 
 export default router;

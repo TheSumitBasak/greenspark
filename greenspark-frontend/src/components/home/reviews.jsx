@@ -14,7 +14,7 @@ const reviews = [
     name: "Luis Ortega",
     role: "Operations Director",
     org: "Andes GreenH2",
-    rating: 5,
+    rating: 4,
   },
   {
     quote:
@@ -22,7 +22,7 @@ const reviews = [
     name: "Luis Ortega",
     role: "Operations Director",
     org: "Andes GreenH2",
-    rating: 5,
+    rating: 4,
   },
   {
     quote:
@@ -30,7 +30,7 @@ const reviews = [
     name: "Dr. Wei Lin",
     role: "Policy Advisor",
     org: "Asia Clean Energy Forum",
-    rating: 4,
+    rating: 5,
   },
 ];
 

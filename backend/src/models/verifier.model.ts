@@ -3,8 +3,10 @@ import mongoose, { Document, Schema } from "mongoose";
 export interface IVerifier extends Document {
   organizationName: string;
   walletAddress: string;
+  email: string;
   documents: string[]; // Cloudinary URLs for verification
   status: "pending" | "active" | "rejected" | "banned";
+  voteStarted: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -22,6 +24,12 @@ const verifierSchema = new Schema<IVerifier>(
       unique: true,
       trim: true,
     },
+    email: {
+      type: String,
+      required: true,
+      trim: true,
+      lowercase: true,
+    },
     documents: [
       {
         type: String,
@@ -32,6 +40,10 @@ const verifierSchema = new Schema<IVerifier>(
       type: String,
       enum: ["pending", "active", "rejected", "banned"],
       default: "pending",
+    },
+    voteStarted: {
+      type: Boolean,
+      default: false,
     },
   },
   {

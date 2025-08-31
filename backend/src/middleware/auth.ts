@@ -56,6 +56,8 @@ export const authenticateToken = async (
           email: "admin@gmail.com",
           walletAddress: decoded.walletAddress,
           status: "verified",
+          role: "admin",
+          type: "admin",
         };
         break;
       default:

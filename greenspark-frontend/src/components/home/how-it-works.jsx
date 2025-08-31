@@ -14,71 +14,75 @@ export function HowItWorks() {
           </p>
         </div>
 
-        <ol className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <li>
-            <div className="card border border-border bg-base-100 shadow-sm h-full">
-              <div className="card-body p-4">
-                <div className="flex flex-row items-center gap-3 mb-2">
-                  <Factory
-                    className="h-5 w-5 text-primary"
-                    aria-hidden="true"
-                  />
-                  <h3 className="card-title">List supply or demand</h3>
-                </div>
-                <p className="text-sm text-muted-foreground m-0">
-                  Producers and buyers submit verified profiles and orders with
-                  certification metadata.
-                </p>
-              </div>
-            </div>
-          </li>
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <div
+            id="marketplace"
+            className="mt-10 overflow-hidden rounded-lg border border-border"
+          >
+            <img
+              src="/flat-design-world-habitat-day-landscape.png"
+              alt="Illustration of green hydrogen production with electrolyzers and renewables"
+              className="w-full"
+            />
+          </div>
 
-          <li>
-            <div className="card border border-border bg-base-100 shadow-sm h-full">
-              <div className="card-body p-4">
-                <div className="flex flex-row items-center gap-3 mb-2">
-                  <Network
-                    className="h-5 w-5 text-primary"
-                    aria-hidden="true"
-                  />
-                  <h3 className="card-title">Smart matching &amp; clearing</h3>
+          <ol className="mt-8 spacing-4 w-full flex flex-col justify-around">
+            <li>
+              <div className="card border border-border bg-base-100 shadow-sm h-full">
+                <div className="card-body p-4">
+                  <div className="flex flex-row items-center gap-3 mb-2">
+                    <Factory
+                      className="h-5 w-5 text-primary"
+                      aria-hidden="true"
+                    />
+                    <h3 className="card-title">List supply or demand</h3>
+                  </div>
+                  <p className="text-sm text-muted-foreground m-0">
+                    Producers and buyers submit verified profiles and orders
+                    with certification metadata.
+                  </p>
                 </div>
-                <p className="text-sm text-muted-foreground m-0">
-                  Orders are matched by transparent rules; clearing and
-                  settlement execute on‑chain.
-                </p>
               </div>
-            </div>
-          </li>
+            </li>
 
-          <li>
-            <div className="card border border-border bg-base-100 shadow-sm h-full">
-              <div className="card-body p-4">
-                <div className="flex flex-row items-center gap-3 mb-2">
-                  <Handshake
-                    className="h-5 w-5 text-primary"
-                    aria-hidden="true"
-                  />
-                  <h3 className="card-title">Settle &amp; verify impact</h3>
+            <li>
+              <div className="card border border-border bg-base-100 shadow-sm h-full">
+                <div className="card-body p-4">
+                  <div className="flex flex-row items-center gap-3 mb-2">
+                    <Network
+                      className="h-5 w-5 text-primary"
+                      aria-hidden="true"
+                    />
+                    <h3 className="card-title">
+                      Smart matching &amp; clearing
+                    </h3>
+                  </div>
+                  <p className="text-sm text-muted-foreground m-0">
+                    Orders are matched by transparent rules; clearing and
+                    settlement execute on‑chain.
+                  </p>
                 </div>
-                <p className="text-sm text-muted-foreground m-0">
-                  Delivery is recorded with certificates and carbon accounting
-                  for credible claims.
-                </p>
               </div>
-            </div>
-          </li>
-        </ol>
+            </li>
 
-        <div
-          id="marketplace"
-          className="mt-10 overflow-hidden rounded-lg border border-border"
-        >
-          <img
-            src="/flat-design-world-habitat-day-landscape.png"
-            alt="Illustration of green hydrogen production with electrolyzers and renewables"
-            className="w-full"
-          />
+            <li>
+              <div className="card border border-border bg-base-100 shadow-sm h-full">
+                <div className="card-body p-4">
+                  <div className="flex flex-row items-center gap-3 mb-2">
+                    <Handshake
+                      className="h-5 w-5 text-primary"
+                      aria-hidden="true"
+                    />
+                    <h3 className="card-title">Settle &amp; verify impact</h3>
+                  </div>
+                  <p className="text-sm text-muted-foreground m-0">
+                    Delivery is recorded with certificates and carbon accounting
+                    for credible claims.
+                  </p>
+                </div>
+              </div>
+            </li>
+          </ol>
         </div>
       </div>
     </section>
